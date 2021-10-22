@@ -1,40 +1,490 @@
-@keyframes bgcolorchange{
-  
-  0%{background-color:aqua;}
-  10%{background-color:aquamarine;}
-  20%{background-color:cyan;}
-  30%{background-color:darkturquoise;}
-  40%{background-color:lightseagreen;}
-  50%{background-color:mediumturquoise;}
-  60%{background-color:lightblue;}
-  70%{background-color:skyblue;}
-  80%{background-color:lightcyan;}
-  90%{background-color:powderblue}
-  100%{background-color:turquoise;}
+/* 
+--------------------------
+*** Variables
+--------------------------
+*/
+/*
+--------------------------
+*** Main Layout **********
+--------------------------
+*/
+.wrapper {
+  width: 980px;
+  margin: 20px auto;
+  position: relative;
 }
-div.letter{
-background-color: lightblue;
-  animation-name: bgcolorchange;
-  animation-duration: 7s;
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
+
+.container {
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 900px;
+  height: 400px;
+  padding: 40px;
+  border-radius: 20px;
 }
-  h1{
-    color: #ffffff;
-    text-shadow:
-      /*white glow*/
-      0 0 7px #708090,
-      0 0 9px #008080,
-      0 0 13px #40e0d0,
-      0 0 21px #00ffff;
+
+/* Content Section ------------------ */
+#content {
+  background-color: darkred;
+  color: black;
+}
+#content h1 {
+  font-size: 4em;
+  text-align: center;
+}
+#content h2 {
+  font-size: 2.5em;
+  text-align: center;
+}
+#content p {
+  font-size: 1.6em;
+  text-align: center;
+}
+
+/* Lockscreen Section ------------------ */
+#access {
+  background-color: #222;
+}
+
+#codes {
+  display: block;
+  position: absolute;
+  width: 360px;
+  height: 80px;
+  top: 190px;
+  left: 500px;
+  overflow: hidden;
+  color: #ddd;
+  border: 20px solid #aaa;
+  border-radius: 8px;
+  background-color: #111;
+  background-image: -webkit-linear-gradient(-270deg, #111 10%, #666 50%, #222 100%);
+  background-image: linear-gradient(0deg,#111 10%, #666 50%, #222 100%);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+#codes ul {
+  position: absolute;
+  width: 104px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  font-size: 4em;
+  border-left: 8px dotted black;
+  border-right: 8px dotted black;
+}
+#codes li {
+  line-height: 80px;
+}
+#codes .digit-one {
+  top: 0;
+  left: 0;
+}
+#codes .digit-two {
+  top: 0;
+  left: 120px;
+}
+#codes .digit-three {
+  top: 0;
+  left: 240px;
+}
+
+/* Code Dial -------------------------------------------- */
+.dial-animation .control-knob, .dial-animation, #dial .control-knob-recess, #dial .control-knob, #dial .outer-ring, #dial {
+  display: block;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.dial-animation .control-knob, #dial .control-knob-recess, #dial .control-knob, #dial .outer-ring {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+/* Code for the static parts of the code dial */
+#dial {
+  width: 400px;
+  height: 400px;
+  background-color: #fff;
+  background-image: -webkit-linear-gradient(-405deg, #fff 20%, #888 50%, #222 100%);
+  background-image: linear-gradient(135deg,#fff 20%, #888 50%, #222 100%);
+}
+#dial .outer-ring {
+  width: 394px;
+  height: 394px;
+  background-image: -webkit-radial-gradient(70% 70%, circle, #666 40%, #fff 80%, #cccccc);
+  background-image: radial-gradient(  circle at 70% 70%, #666 40%, #fff 80%, #cccccc);
+  border: 1px solid #888;
+}
+#dial .control-knob {
+  width: 252px;
+  height: 252px;
+  background-color: #222;
+}
+#dial .control-knob-recess {
+  width: 184px;
+  height: 184px;
+  background-image: -webkit-radial-gradient(60% 60%, circle, #1b1b1b 50%, black 90%, #cccccc);
+  background-image: radial-gradient(  circle at 60% 60%, #1b1b1b 50%, black 90%, #cccccc);
+}
+
+/* Code for the animated parts of the code dial */
+.dial-animation {
+  width: 400px;
+  height: 400px;
+}
+.dial-animation .marker {
+  display: block;
+  width: 6px;
+  height: 40px;
+  background-color: #222;
+  background-image: -webkit-linear-gradient(-270deg, #222 92%, #646464 92%, #646464 100%);
+  background-image: linear-gradient(0deg,#222 92%, #646464 92%, #646464 100%);
+  position: absolute;
+  top: 0;
+  left: 197px;
+}
+.dial-animation .control-knob {
+  width: 250px;
+  height: 250px;
+  border: 6px dotted #222;
+}
+.dial-animation .control-knob a {
+  display: block;
+  line-height: 250px;
+  width: 100%;
+  text-align: center;
+  font-size: 1.3em;
+  color: #ddd;
+  text-decoration: none;
+  word-wrap: nowrap;
+}
+
+/*
+-----------------------------------------------------
+*** Animation Trigger Code **************************
+-----------------------------------------------------
+
+Rotate dial and code numbers to reveal the numbers 247.
+At the end of the rotation sequence, slide the lock panel
+away to reveal the content behind.
+
+*/
+#access:target {
+  -webkit-animation: unlock 3s ease-in 5.2s forwards;
+  -moz-animation: unlock 3s ease-in 5.2s forwards;
+  animation: unlock 3s ease-in 5.2s forwards;
+}
+#access:target .dial-animation {
+  -webkit-animation: rotate 5s ease forwards;
+  -moz-animation: rotate 5s ease forwards;
+  animation: rotate 5s ease forwards;
+}
+#access:target .digit-one {
+  -webkit-animation: first 5s ease forwards;
+  -moz-animation: first 5s ease forwards;
+  animation: first 5s ease forwards;
+}
+#access:target .digit-two {
+  -webkit-animation: second 5s ease forwards;
+  -moz-animation: second 5s ease forwards;
+  animation: second 5s ease forwards;
+}
+#access:target .digit-three {
+  -webkit-animation: third 5s ease forwards;
+  -moz-animation: third 5s ease forwards;
+  animation: third 5s ease forwards;
+}
+
+/*
+---------------------------------------------------
+*** Animation Code ********************************
+---------------------------------------------------
+*/
+/* Animation for the rotation of the code wheel */
+@-webkit-keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0deg);
   }
-h2{
-  color: #ffffff;
-  text-shadow:
-    /*whit glow*/
-   0 0 7px #daa520,
-   0 0 9px #ffa500,
-   0 0 13px #ffd700,
-   0 0 21px #ffff00,
-   0 0 28px #f8f8ff;
- }
+  50% {
+    -webkit-transform: rotate(1044deg);
+  }
+  85% {
+    -webkit-transform: rotate(144deg);
+  }
+  100% {
+    -webkit-transform: rotate(540deg);
+  }
+}
+@-moz-keyframes rotate {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  50% {
+    -moz-transform: rotate(1044deg);
+  }
+  85% {
+    -moz-transform: rotate(144deg);
+  }
+  100% {
+    -moz-transform: rotate(540deg);
+  }
+}
+@keyframes rotate {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  50% {
+    -webkit-transform: rotate(1044deg);
+    -moz-transform: rotate(1044deg);
+    -ms-transform: rotate(1044deg);
+    -o-transform: rotate(1044deg);
+    transform: rotate(1044deg);
+  }
+  85% {
+    -webkit-transform: rotate(144deg);
+    -moz-transform: rotate(144deg);
+    -ms-transform: rotate(144deg);
+    -o-transform: rotate(144deg);
+    transform: rotate(144deg);
+  }
+  100% {
+    -webkit-transform: rotate(540deg);
+    -moz-transform: rotate(540deg);
+    -ms-transform: rotate(540deg);
+    -o-transform: rotate(540deg);
+    transform: rotate(540deg);
+  }
+}
+/* Animation for digit one of the code */
+@-webkit-keyframes first {
+  0% {
+    -webkit-transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-2320px);
+  }
+  100% {
+    -webkit-transform: translateY(-2320px);
+  }
+}
+@-moz-keyframes first {
+  0% {
+    -moz-transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-2320px);
+  }
+  100% {
+    -moz-transform: translateY(-2320px);
+  }
+}
+@keyframes first {
+  0% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-2320px);
+    -moz-transform: translateY(-2320px);
+    -ms-transform: translateY(-2320px);
+    -o-transform: translateY(-2320px);
+    transform: translateY(-2320px);
+  }
+  100% {
+    -webkit-transform: translateY(-2320px);
+    -moz-transform: translateY(-2320px);
+    -ms-transform: translateY(-2320px);
+    -o-transform: translateY(-2320px);
+    transform: translateY(-2320px);
+  }
+}
+/* Animation for digit two of the code */
+@-webkit-keyframes second {
+  0% {
+    -webkit-transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-2320px);
+  }
+  85% {
+    -webkit-transform: translateY(-320px);
+  }
+  100% {
+    -webkit-transform: translateY(-320px);
+  }
+}
+@-moz-keyframes second {
+  0% {
+    -moz-transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-2320px);
+  }
+  85% {
+    -moz-transform: translateY(-320px);
+  }
+  100% {
+    -moz-transform: translateY(-320px);
+  }
+}
+@keyframes second {
+  0% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-2320px);
+    -moz-transform: translateY(-2320px);
+    -ms-transform: translateY(-2320px);
+    -o-transform: translateY(-2320px);
+    transform: translateY(-2320px);
+  }
+  85% {
+    -webkit-transform: translateY(-320px);
+    -moz-transform: translateY(-320px);
+    -ms-transform: translateY(-320px);
+    -o-transform: translateY(-320px);
+    transform: translateY(-320px);
+  }
+  100% {
+    -webkit-transform: translateY(-320px);
+    -moz-transform: translateY(-320px);
+    -ms-transform: translateY(-320px);
+    -o-transform: translateY(-320px);
+    transform: translateY(-320px);
+  }
+}
+/* Animation for digit three of the code*/
+@-webkit-keyframes third {
+  0% {
+    -webkit-transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-2320px);
+  }
+  85% {
+    -webkit-transform: translateY(-320px);
+  }
+  100% {
+    -webkit-transform: translateY(-1200px);
+  }
+}
+@-moz-keyframes third {
+  0% {
+    -moz-transform: translateY(0);
+  }
+  50% {
+    -moz-transform: translateY(-2320px);
+  }
+  85% {
+    -moz-transform: translateY(-320px);
+  }
+  100% {
+    -moz-transform: translateY(-1200px);
+  }
+}
+@keyframes third {
+  0% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(-2320px);
+    -moz-transform: translateY(-2320px);
+    -ms-transform: translateY(-2320px);
+    -o-transform: translateY(-2320px);
+    transform: translateY(-2320px);
+  }
+  85% {
+    -webkit-transform: translateY(-320px);
+    -moz-transform: translateY(-320px);
+    -ms-transform: translateY(-320px);
+    -o-transform: translateY(-320px);
+    transform: translateY(-320px);
+  }
+  100% {
+    -webkit-transform: translateY(-1200px);
+    -moz-transform: translateY(-1200px);
+    -ms-transform: translateY(-1200px);
+    -o-transform: translateY(-1200px);
+    transform: translateY(-1200px);
+  }
+}
+/* Animation for the front panel sliding away to reveal the content */
+@-webkit-keyframes unlock {
+  0% {
+    -webkit-transform: translateY(0);
+  }
+  2% {
+    -webkit-transform: translateY(20px);
+  }
+  15% {
+    -webkit-transform: translateY(20px);
+  }
+  100% {
+    -webkit-transform: translateY(480px);
+  }
+}
+@-moz-keyframes unlock {
+  0% {
+    -moz-transform: translateY(0);
+  }
+  2% {
+    -moz-transform: translateY(20px);
+  }
+  15% {
+    -moz-transform: translateY(20px);
+  }
+  100% {
+    -moz-transform: translateY(480px);
+  }
+}
+@keyframes unlock {
+  0% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  2% {
+    -webkit-transform: translateY(20px);
+    -moz-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    -o-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+  15% {
+    -webkit-transform: translateY(20px);
+    -moz-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    -o-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+  100% {
+    -webkit-transform: translateY(480px);
+    -moz-transform: translateY(480px);
+    -ms-transform: translateY(480px);
+    -o-transform: translateY(480px);
+    transform: translateY(480px);
+  }
+}
